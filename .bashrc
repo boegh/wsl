@@ -1,8 +1,7 @@
-# If not running interactively, don't do anything
-#case $- in
-#    *i*) ;;
-#      *) return;;
-#esac
+# My .bashrc for WSL w/ Debian GNU/Linux
+# $ uname -srvmpio
+# Linux 4.4.0-17134-Microsoft #285-Microsoft Thu Aug 30 17:31:00 PST 2018 x86_64 unknown unknown GNU/Linux
+#
 
 HISTCONTROL=ignoreboth
 shopt -s histappend
@@ -66,3 +65,4 @@ tc() {
     fi
 }
 
+Linux 4.4.0-17134-Microsoft #285-Microsoft Thu Aug 30 17:31:00 PST 2018 x86_64 unknown unknown GNU/Linux
