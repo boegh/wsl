@@ -1,13 +1,9 @@
-# My .bashrc for WSL w/ Debian GNU/Linux
-# $ uname -srvmpio
-# Linux 4.4.0-17134-Microsoft #285-Microsoft Thu Aug 30 17:31:00 PST 2018 x86_64 unknown unknown GNU/Linux
-#
-
 HISTCONTROL=ignoreboth
 shopt -s histappend
 HISTSIZE=1000
 HISTFILESIZE=2000
-DISPLAY="127.0.0.1:0.0"
+
+# Regular stuff
 
 shopt -s checkwinsize
 
@@ -15,21 +11,13 @@ if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
     debian_chroot=$(cat /etc/debian_chroot)
 fi
 
-case "$TERM" in
-    xterm-color|*-256color) color_prompt=yes;;
-esac
-
-force_color_prompt=yes
-
-if [ -n "$force_color_prompt" ]; then
-    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-	color_prompt=yes
-    else
-	color_prompt=
-    fi
-fi
-
+color_prompt=yes
 PS1="\[\e[0;32m\]\t \W\[\e[1;37m\]> "
+
+if [ -x /usr/bin/dircolors ]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    alias ls='ls --color=auto'
+fi
 
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
@@ -42,8 +30,24 @@ if ! shopt -oq posix; then
   fi
 fi
 
+# Custom Stuff
+
+export PATH=$PATH:~/bin
 
 
+# WSL requires cron to be started everytime - remember to add the following to sudoers:
+# 	$USER        ALL = NOPASSWD: /usr/sbin/service cron *
+# and to put user into sudoers group:
+# 	usermod -a -G crontab $USER
+
+/usr/bin/sudo /usr/sbin/service cron start
+
+
+# Start rsyslog - because we like logging (remember to add line to sudoers)
+
+/usr/bin/sudo /usr/sbin/service rsyslog start
+
+### aliases etc.
 
 wedit() {
     RWSLPATH=$(wslpath -w $(realpath $1))
@@ -58,11 +62,20 @@ wedit() {
 tc() {
     RWSLPATH=$(wslpath -w $(realpath $(pwd)))
     if [[ -n $RWSLPATH ]]; then
-	'/mnt/c/Users/polle/bin/totalcmd/TOTALCMD64.exe' $RWSLPATH &
+	'/mnt/c/Users/henri/bin/totalcmd/TOTALCMD64.exe' $RWSLPATH &
 	disown
     else
 	echo "Error - path probably within WSL root"
     fi
 }
 
-Linux 4.4.0-17134-Microsoft #285-Microsoft Thu Aug 30 17:31:00 PST 2018 x86_64 unknown unknown GNU/Linux
+ytmp3dl() {
+    /usr/local/bin/youtube-dl  --extract-audio --audio-format mp3 $1
+}
+
+
+# Export DISPLAY for X11. I'm using VcXsrv for the purpose. Starting it automatically with a shortcut in shell:startup of Windows and a saved configuration:
+# "C:\Program Files\VcXsrv\xlaunch.exe" -run C:\Users\henri\default.xlaunch
+# For some odd reason I can only get this to work properly if it is in the end of .bashrc...
+
+export DISPLAY=:0.0
