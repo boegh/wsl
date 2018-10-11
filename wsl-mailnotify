@@ -4,6 +4,9 @@ import os
 import tkinter as tk
 import tkinter.simpledialog
 
+# nmc is count from directory
+# mnc is count from countfile (to ensure that notification only pops up ONCE for each new mail)
+
 nmc = len([f for f in os.listdir('/home/heb/Maildir/new/') if os.path.isfile(os.path.join('/home/heb/Maildir/new/', f)) and f[0] != '.'])
 
 if nmc > 0:
