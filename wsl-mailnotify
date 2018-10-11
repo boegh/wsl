@@ -1,0 +1,19 @@
+#!/usr/bin/python3
+
+import os
+import tkinter as tk
+import tkinter.simpledialog
+
+nmc = len([f for f in os.listdir('/home/heb/Maildir/new/') if os.path.isfile(os.path.join('/home/heb/Maildir/new/', f)) and f[0] != '.'])
+
+if nmc > 0:
+    f = open("/home/heb/.mailnotifycount", "r")
+    mnc = int(f.read())
+    if mnc != nmc:
+        root = tk.Tk()
+        root.withdraw()
+        root.option_add("*Font", "Tahoma 20 bold")
+        root.option_add('*Dialog.msg.width', 8)
+        rc = tk.messagebox.showinfo('New mail', 'Count: ' + str(nmc))
+        f = open("/home/heb/.mailnotifycount", "w")
+        f.write(str(nmc)) 
