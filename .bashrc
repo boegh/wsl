@@ -1,3 +1,9 @@
+# Start out by entering home directory - no matter where bash is invoked from!
+
+cd ~
+
+# Bash stuff
+
 HISTCONTROL=ignoreboth
 shopt -s histappend
 HISTSIZE=1000
