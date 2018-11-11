@@ -2,7 +2,10 @@
 # This is my .bashrc for use on Windows for Linux Subsystem (WSL). It's updated along the way, as I get more hang of WSL.
 # Working with bash in WSL is a bit different from using a "nativ" Linux/*BSD, among other things because the base system isn't running (completely anway) when bash is not start.
 # Any form of feedback would be much appreciated: https://github.com/boegh/wsl/issues
+# You may observe that I prefer functions rather than aliases in bashrc. I'm not sure why. I've done that for many years. There are probably arguments against doing it that way, but I'll continue do it for now. You can read more about Bash aliases/functions on https://www.digitalocean.com/community/tutorials/an-introduction-to-useful-bash-aliases-and-functions
 # ======================================================================
+
+
 
 # Start out by entering home directory - no matter where bash is invoked from!
 # I've experienced that bash hangs a couple of times when started from cmd in a directory that is not %userprofile%.
@@ -54,26 +57,22 @@ export PATH=$PATH:~/bin
 # 	usermod -a -G crontab $USER
 
 
-/usr/bin/sudo /usr/sbin/service cron status
+/usr/bin/sudo /usr/sbin/service cron status > /dev/null
 
 if [ $? -eq 3 ]
 then
     /usr/bin/sudo /usr/sbin/service cron start
-else
-  echo "Doing nothing..." >&2
 fi
 
 
 # Start rsyslog - because we like logging (remember to add line to sudoers)
 
 
-/usr/bin/sudo /usr/sbin/service rsyslog status
+/usr/bin/sudo /usr/sbin/service rsyslog status > /dev/null
 
 if [ $? -eq 3 ]
 then
     /usr/bin/sudo /usr/sbin/service rsyslog start
-else
-  echo "Doing nothing..." >&2
 fi
 
 
@@ -121,6 +120,35 @@ ytmp3dl() {
     /usr/local/bin/youtube-dl  --extract-audio --audio-format mp3 $1
 }
 
+
+# retrieve public keys from Keybase and store them in GPG keyring
+# See https://github.com/keybase/keybase-issues/issues/1396 for more info
+
+
+k2g() {
+    /usr/bin/wget -qO - https://keybase.io/$1/key.asc | /usr/bin/gpg --import -
+}
+
+
+# nmap on WSL currently doesn't work as AF_PACKET needed by nmap (and other tools like wireshark) is not yet implemented.
+# solution: Install the Windows version and alias to it from WSL
+# See https://github.com/Microsoft/WSL/issues/1349
+
+nmap() {
+    /mnt/c/Program\ Files\ \(x86\)/Nmap/nmap.exe $@
+}
+
+
+# convert mkv files to gif files
+# requires both ffmpeg (from package ffmpeg) and convert (from package imagemagick-6.q16)
+
+mkv2gif() {
+    if [ -f "$@" ]; then
+	FILE="$@"
+	FILENAME=${FILE%.*}
+	/usr/bin/ffmpeg -i "$FILE" -vf scale=640:-1 -r 15 -f image2pipe -vcodec ppm - | /usr/bin/convert-im6.q16 -delay 5 -loop 0 - "$FILENAME.gif"
+    fi
+}
 
 # Export DISPLAY for X11. I'm using VcXsrv for the purpose. Starting it automatically with a shortcut in shell:startup of Windows and a saved configuration:
 # "C:\Program Files\VcXsrv\xlaunch.exe" -run C:\Users\henri\default.xlaunch
