@@ -3,6 +3,7 @@
 # Working with bash in WSL is a bit different from using a "nativ" Linux/*BSD, among other things because the base system isn't running (completely anway) when bash is not start.
 # Any form of feedback would be much appreciated: https://github.com/boegh/wsl/issues
 # You may observe that I prefer functions rather than aliases in bashrc. I'm not sure why. I've done that for many years. There are probably arguments against doing it that way, but I'll continue do it for now. You can read more about Bash aliases/functions on https://www.digitalocean.com/community/tutorials/an-introduction-to-useful-bash-aliases-and-functions
+# You'll see the directory ~/WinHome/ on occation here. It is a symbolic link out of the WSL filespace to the Windows Home directory ( %userprofile% in Windows ).
 # ======================================================================
 
 
@@ -12,6 +13,8 @@
 # I'm not sure why or how (suspect it is related to starting cron or syslogd in bashrc), but this seems to do the trick.
 
 cd ~
+
+
 # Bash stuff
 
 HISTCONTROL=ignoreboth
@@ -149,6 +152,19 @@ mkv2gif() {
 	/usr/bin/ffmpeg -i "$FILE" -vf scale=640:-1 -r 15 -f image2pipe -vcodec ppm - | /usr/bin/convert-im6.q16 -delay 5 -loop 0 - "$FILENAME.gif"
     fi
 }
+
+
+# convert a png to Windows icon - useful for Windows shortscuts to WSL executables
+# Look in /usr/share/icons/ or /usr/share/<app name (-ish)>/icons
+# requires imagemagick and puts the Windows icons in %userprofile%\bin.icon\.
+
+winicon() {
+    if [ -f "$1" ]; then
+	FILENAME=$(basename $1)
+	/usr/bin/convert $1 -define icon:auto-resize=64,48,32,16 ~/WinHome/bin.icon/$FILENAME.ico
+    fi
+}
+
 
 # Export DISPLAY for X11. I'm using VcXsrv for the purpose. Starting it automatically with a shortcut in shell:startup of Windows and a saved configuration:
 # "C:\Program Files\VcXsrv\xlaunch.exe" -run C:\Users\henri\default.xlaunch
