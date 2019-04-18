@@ -1,3 +1,0 @@
-hest
-test
-test
