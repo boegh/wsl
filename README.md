@@ -1,6 +1,6 @@
 This is where I put stuff related to Windows Subsystem for Linux (WSL).
 
-**NOTE**: This page is work in progress (and will probably remain so for quite a while...)
+**NOTE**: I stopped looking into WSL in January '19. Back then it was WSL 1. Since then [Microsoft announced WSL 2](https://devblogs.microsoft.com/commandline/wsl-2-is-now-available-in-windows-insiders/), which is quite different. The below writings may or may not be applicable for WSL 2, and could quite well be outdated.
 
 Important stuff first - here are a couple of very good links for reference:
 - [Microsoft Docs WSL interoperability with Windows](https://docs.microsoft.com/en-us/windows/wsl/interop)
