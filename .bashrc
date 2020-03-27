@@ -99,6 +99,7 @@ wedit() {
     fi
 }
 
+
 # tc is used to start TotalCommander: a dual-pane filemanager for Windows - https://www.ghisler.com/
 # This command uses the current directory ($(pwd)) for application launch
 
@@ -117,21 +118,6 @@ tc() {
     fi
 }
 
-# ytmp3dl is a regular alias with a parameter (youtube video to download as mp3) for youtube-dl - https://github.com/rg3/youtube-dl/
-
-ytmp3dl() {
-    /usr/local/bin/youtube-dl  --extract-audio --audio-format mp3 $1
-}
-
-
-# retrieve public keys from Keybase and store them in GPG keyring
-# See https://github.com/keybase/keybase-issues/issues/1396 for more info
-
-
-k2g() {
-    /usr/bin/wget -qO - https://keybase.io/$1/key.asc | /usr/bin/gpg --import -
-}
-
 
 # nmap on WSL currently doesn't work as AF_PACKET needed by nmap (and other tools like wireshark) is not yet implemented.
 # solution: Install the Windows version and alias to it from WSL
@@ -139,18 +125,6 @@ k2g() {
 
 nmap() {
     /mnt/c/Program\ Files\ \(x86\)/Nmap/nmap.exe $@
-}
-
-
-# convert mkv files to gif files
-# requires both ffmpeg (from package ffmpeg) and convert (from package imagemagick-6.q16)
-
-mkv2gif() {
-    if [ -f "$@" ]; then
-	FILE="$@"
-	FILENAME=${FILE%.*}
-	/usr/bin/ffmpeg -i "$FILE" -vf scale=640:-1 -r 15 -f image2pipe -vcodec ppm - | /usr/bin/convert-im6.q16 -delay 5 -loop 0 - "$FILENAME.gif"
-    fi
 }
 
 
