@@ -171,6 +171,3 @@ winicon() {
 # For some odd reason I can only get this to work properly if it is in the end of .bashrc...
 
 export DISPLAY=:0.0
-#!/bin/bash
-
-
